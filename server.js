@@ -1,5 +1,7 @@
-const express = require('express');
-const app = express();
+const app = require('./app');
+
+
+
 
 // Start Server
 app.listen(3000, () => {
