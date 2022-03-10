@@ -1,0 +1,24 @@
+{
+  "name": "libraryproject",
+  "version": "1.0.0",
+  "description": "Welcome to our PROJECT!",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meirozenfeld/LibraryProject.git"
+  },
+  "author": "Tal Damri and Meir Rosenfeld",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meirozenfeld/LibraryProject/issues"
+  },
+  "homepage": "https://github.com/meirozenfeld/LibraryProject#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}
