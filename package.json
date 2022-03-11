@@ -18,7 +18,9 @@
   "homepage": "https://github.com/meirozenfeld/LibraryProject#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "mongoose": "^5.13.14",
     "nodemon": "^2.0.15"
   }
 }
