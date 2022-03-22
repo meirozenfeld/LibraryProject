@@ -2,7 +2,7 @@ const Book = require('./../models/bookModel');
 const APIFeatures = require('./../utils/apiFeatures');
 
 exports.aliasLongestBooks = (req, res, next) => {
-    req.query.limit = '1';
+    req.query.limit = '5';
     req.query.sort = '-pages';
     req.query.fields = 'name,author,pages,genre';
     next();
