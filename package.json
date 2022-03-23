@@ -4,7 +4,8 @@
   "description": "Welcome to our PROJECT!",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "debug": "ndb server.js"
   },
   "repository": {
     "type": "git",
