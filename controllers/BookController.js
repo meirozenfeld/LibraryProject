@@ -1,7 +1,7 @@
-const Book = require('./../models/bookModel');
-const APIFeatures = require('./../utils/apiFeatures');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
+const Book = require('../models/bookModel');
+const APIFeatures = require('../utils/apiFeatures');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.aliasLongestBooks = (req, res, next) => {
     req.query.limit = '5';
@@ -34,7 +34,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         return next(new AppError(`${req.params.id} id Invalid `, 400));
     }
-    
+
     const book = await Book.findById(req.params.id);
     // User.findOne({_id: req.params.id}); // same result deferent way
 
