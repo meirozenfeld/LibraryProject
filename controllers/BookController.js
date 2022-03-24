@@ -19,7 +19,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
         .limitFields()
         .paginate();
     const books = await features.query;
-
+    
     res.status(200).json({
         status: 'success',
         numberOfResults: books.length,

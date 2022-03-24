@@ -6,7 +6,7 @@ const userRouter = require('./routes/UserRoutes');
 const BookRouter = require('./routes/BookRoutes');
 
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 // Routes
 app.use('/users', userRouter);

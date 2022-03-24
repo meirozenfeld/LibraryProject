@@ -28,11 +28,23 @@ module.exports = (err, req, res, next) => {
         error = new AppError(message, 400);
     }
 
+    //  Bad token for protect data
+    if (err.name === 'JsonWebTokenError') {
+        const message = `Invalid Token, Please log in again`;
+        error = new AppError(message, 400);
+    }
+
+    //  Expired token for protect data
+    if (err.name === 'TokenExpiredError') {
+        const message = `Expired Token, Please log in again`;
+        error = new AppError(message, 400);
+    }
+
     // Operational, trusted errors
     if (error.isOperational) {
-        res.status(error.statusCode).json({
-            status: error.status,
-            message: error.message,
+        res.status(err.statusCode).json({
+            status: err.status,
+            message: error.message || err.message,
             // error: err
         });
     }
