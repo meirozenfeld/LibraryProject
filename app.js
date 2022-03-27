@@ -5,7 +5,8 @@ const globalErrorHandler = require('./controllers/errorController')
 const userRouter = require('./routes/UserRoutes');
 const BookRouter = require('./routes/BookRoutes');
 
-const app = express();
+const app = express()
+
 app.use(express.json());
 
 // Routes

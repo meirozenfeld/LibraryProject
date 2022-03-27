@@ -2,7 +2,9 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('../utils/appError');
+const AppError = require('./../utils/appError');
+const sendEmail = require('./../utils/email');
+
 
 const signToken = id => {
     const token = jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -96,7 +98,49 @@ exports.premissionTo = (...roles) => {
         // roles its array, for exmple ['admin', 'librarian']
         if (!roles.includes(req.user.role)) {
             return next(new AppError('You dont have this premission to this action', 403));
-        };
+        }
         next();
+    };
+};
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+    //  Get the curr user by email
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+        return next(new AppError('No User found with this email address', 404));
     }
-}
+
+    // Generate random reset token
+    const resetToken = user.createPasswordResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    // Send it to the users email
+    const resetURL = `${req.protocol}://${req.get('host')}/users/resetPassword/${resetToken}`;
+
+    const message = `Forgot your password? submit a PATCH request with your new password and password confirm to - ${resetURL}`;
+
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'Your password reset token, valid for 10 minutes',
+            message
+        });
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Token sent to your mail'
+        });
+    } catch (err) {
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        return next(new AppError('There was an error sending the mail, please try again later', 500));
+    }
+
+});
+
+exports.resetPassword = (res, req, next) => {
+
+};
