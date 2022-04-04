@@ -42,9 +42,15 @@ const userSchema = new mongoose.Schema({
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
-    passwordResetExpires: Date
-
+    passwordResetExpires: Date,
+    active: {
+        type: Boolean,
+        default: true,
+        select: false
+    }
 });
+
+
 
 userSchema.pre('save', async function (next) {
     // next if the password didnt modified
@@ -58,6 +64,21 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
+// midllware for all methods that use save
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password') || this.isNew) return next();
+
+    this.passwordChangedAt = Date.now() - 1000;
+    next();
+});
+
+// midllware for all methods that starts with find
+userSchema.pre(/^find/, function (next) {
+    // Find only exsist users, and not deleted users
+    this.find({ active: { $ne: false } });
+    next();
+});
+
 userSchema.methods.checkPassword = async function (tryPassword, userPassword) {
     return await bcrypt.compare(tryPassword, userPassword);
 };
@@ -65,7 +86,7 @@ userSchema.methods.checkPassword = async function (tryPassword, userPassword) {
 userSchema.methods.changePassAfterToken = function (JWTTimeTaken) {
     if (this.passwordChangedAt) {
         const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
-        // console.log("1111111", changedTimestamp, "22222222222", JWTTimeTaken);
+        // console.log("1", changedTimestamp, "2", JWTTimeTaken);
         return JWTTimeTaken < changedTimestamp;
     }
     // false when password not changed
