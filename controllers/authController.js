@@ -18,8 +18,18 @@ exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create(req.body);
     createAndSendToken(newUser, 201, res);
 });
+
 const createAndSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
+
+    res.cookie('jwt', token, {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 1000),
+        secure: true,
+        httpOnly: true
+    });
+
+    // Remove passwort from output
+    user.password = undefined;
 
     res.status(statusCode).json({
         status: 'success',
